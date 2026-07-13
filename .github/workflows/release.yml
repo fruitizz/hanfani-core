@@ -33,7 +33,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install
         run: pnpm install
@@ -62,11 +61,16 @@ jobs:
 
       - name: Publish to npm (public, with provenance)
         run: |
-          if [ -z "$NODE_AUTH_TOKEN" ]; then
+          # strip any stray whitespace/newline from the secret (illegal in an HTTP header)
+          TOKEN="$(printf '%s' "$NODE_AUTH_TOKEN" | tr -d '[:space:]')"
+          if [ -z "$TOKEN" ]; then
             echo "::error::NPM_TOKEN secret is not set — add it in Settings → Secrets and variables → Actions"
             exit 1
           fi
-          npm config set //registry.npmjs.org/:_authToken "$NODE_AUTH_TOKEN"
+          {
+            echo "registry=https://registry.npmjs.org/"
+            echo "//registry.npmjs.org/:_authToken=$TOKEN"
+          } > ~/.npmrc
           pnpm publish --access public --no-git-checks --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
