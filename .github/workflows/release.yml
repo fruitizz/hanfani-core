@@ -1,9 +1,9 @@
 name: Release
 
-# Publishes @hanfani/core to npm when you push a matching version tag, e.g.:
-#   git tag core-v0.1.2 && git push origin core-v0.1.2
+# Publishes @hanfani/core to npm when you push a version tag, e.g.:
+#   git tag v0.1.2 && git push origin v0.1.2
 #
-# Prerequisites (one-time):
+# Prerequisite (one-time):
 #   - Repo secret NPM_TOKEN = an npm "Automation" access token with publish
 #     rights to the @hanfani scope (Automation tokens bypass 2FA, required in CI).
 #     Create at npmjs.com → Access Tokens → Generate New Token → Automation.
@@ -11,14 +11,14 @@ name: Release
 on:
   push:
     tags:
-      - 'core-v*'
+      - 'v*'
 
 permissions:
   contents: write # create the GitHub Release
   id-token: write # npm provenance (verified "built on GitHub Actions" badge)
 
 jobs:
-  release-core:
+  release:
     name: Publish @hanfani/core
     runs-on: ubuntu-latest
     steps:
@@ -26,7 +26,7 @@ jobs:
 
       - name: Derive version from tag
         id: version
-        run: echo "version=${GITHUB_REF_NAME#core-v}" >> "$GITHUB_OUTPUT"
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
       - uses: pnpm/action-setup@v4 # reads packageManager from package.json
 
@@ -41,23 +41,23 @@ jobs:
 
       - name: Guard — tag must match package.json version
         run: |
-          PKG_VERSION=$(node -p "require('./packages/core/package.json').version")
+          PKG_VERSION=$(node -p "require('./package.json').version")
           if [ "$PKG_VERSION" != "${{ steps.version.outputs.version }}" ]; then
-            echo "::error::Tag core-v${{ steps.version.outputs.version }} != packages/core/package.json version $PKG_VERSION"
+            echo "::error::Tag v${{ steps.version.outputs.version }} != package.json version $PKG_VERSION"
             exit 1
           fi
 
       - name: Typecheck
-        run: pnpm --filter @hanfani/core typecheck
+        run: pnpm typecheck
 
       - name: Test
-        run: pnpm --filter @hanfani/core test
+        run: pnpm test
 
       - name: Build
-        run: pnpm --filter @hanfani/core build
+        run: pnpm build
 
       - name: Publish to npm (public, with provenance)
-        run: pnpm --filter @hanfani/core publish --access public --no-git-checks --provenance
+        run: pnpm publish --access public --no-git-checks --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
