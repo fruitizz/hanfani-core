@@ -1,39 +1,47 @@
-# hanfani-framework
+# @hanfani/core
 
-The `@hanfani/*` agent-framework packages, as a pnpm-workspace monorepo. One
-GitHub repo; each package publishes independently to npm.
+Headless engine and types for the Hanfani agent framework.
 
-## Packages
+Pure logic — no I/O, no server, no React. This is the layer that defines what a
+workflow and an agent *are* and enforces the framework's one safety invariant:
 
-| Package | Status | Depends on |
-|---|---|---|
-| `@hanfani/core` | ✅ fresh, owned source | `@ag-ui/client`, `zod` |
-| `@hanfani/integrations` | planned | core (+ googleapis) |
-| `@hanfani/providers` | planned | core (+ mastra) |
-| `@hanfani/react` | planned | core (+ react) |
-| `@hanfani/server` | planned | core (+ drizzle, hono) |
+> An agent proposes, a human approves, the server acts.
 
-Build order is **core first**; the other four each depend on core.
+`defineAgent` refuses any `effect` that isn't also an `approval`, so a side
+effect can never be wired to fire without a human gate. `providerConformanceChecks`
+proves any provider honours that at runtime.
 
-## Develop
+## Exports
+
+- **Definitions:** `defineAgent`, `defineWorkflow`, `definePrompt`,
+  `defineProviders`, `AgentDefinitionSchema`.
+- **Messages:** `isAssistant`, `isToolMessage`, `toolCallsOf`,
+  `hasPendingApproval`, `pairToolResults`, `lastApprovalArgs`,
+  `resolvedApprovalCount`, `approvalResolved`.
+- **Handoffs:** `encodeHandoff`, `decodeHandoff`, `handoffNote`,
+  `HandoffPayloadSchema`, `TicketHandoffPayloadSchema`.
+- **Gates & events:** `gateOpened`, `readGateOpened`, `GATE_OPENED`,
+  `GateOpenedValueSchema`, `lifecycleNote`, `LIFECYCLE_NOTE_TEXT`,
+  `foldEventsToMessages`.
+- **Lifecycle & delivery:** `lifecycle`, `hasLiveDescendant`, `resolveDelivery`,
+  `instanceId`, `composeInstructions`.
+- **Providers & integration:** `providerConformanceChecks`, `aggregateHealth`,
+  `isOk`, `isOAuth2`.
+- Plus the full type surface (`WorkflowDescriptor`, `Outcome`, `Phase`,
+  `Provider`, `EffectFn`, `AuthSpec`, `ResolvedCredential`, …).
+
+## Build & test
+
+Built with the native TypeScript 7 compiler (`tsc` / tsgo) — no bundler, no
+compiler-API tooling, so nothing here breaks on the TS 7 upgrade.
 
 ```bash
-pnpm install
-pnpm build        # build every package
-pnpm typecheck
-pnpm test
+pnpm build       # tsc -p tsconfig.build.json → dist/*.js + dist/*.d.ts
+pnpm typecheck   # tsc -p tsconfig.json --noEmit
+pnpm test        # vitest smoke suite
 ```
 
-## Publish a package (after validating — see packages/core/VALIDATE.md)
+## Peer runtime
 
-```bash
-# one-time: create a free npmjs.com account + an org named "hanfani"
-npm login
-pnpm --filter @hanfani/core publish --access public
-```
-
-## Consume from the app
-
-Replace the app's alias `"@hanfani/core": "npm:@atizar/core@^0.1.1"` with the
-real published package `"@hanfani/core": "^0.1.1"`.
-# hanfani-framework
+Depends on `@ag-ui/client` (event/message types) and `zod` (schemas). Both are
+declared as regular dependencies.
