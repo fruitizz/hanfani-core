@@ -32,6 +32,12 @@ const reply = defineAgent({
 })
 ```
 
+## Dependencies
+
+Depends on [`@ag-ui/client`](https://github.com/ag-ui-protocol/ag-ui)
+(event/message types) and [`zod`](https://github.com/colinhacks/zod) (schemas),
+both declared as regular dependencies.
+
 ## Docs
 
 Full API reference and guides are coming soon in the Hanfani framework docs.
