@@ -35,3 +35,7 @@ const reply = defineAgent({
 ## Docs
 
 Full API reference and guides are coming soon in the Hanfani framework docs.
+
+## License
+
+[MIT](./LICENSE) License © [Mashkour Abdel Aziz](https://github.com/fruitizz)
