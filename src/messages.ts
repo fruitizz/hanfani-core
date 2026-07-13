@@ -3,14 +3,17 @@ import type { Message, ToolCall } from '@ag-ui/client'
 export type AssistantMessage = Extract<Message, { role: 'assistant' }>
 export type ToolMessage = Extract<Message, { role: 'tool' }>
 
+/** Type guard for assistant messages. */
 export function isAssistant(m: Message): m is AssistantMessage {
   return m.role === 'assistant'
 }
 
+/** Type guard for tool-result messages. */
 export function isToolMessage(m: Message): m is ToolMessage {
   return m.role === 'tool'
 }
 
+/** The tool calls on a message (empty for non-assistant messages). */
 export function toolCallsOf(m: Message): ToolCall[] {
   return isAssistant(m) && Array.isArray(m.toolCalls) ? m.toolCalls : []
 }

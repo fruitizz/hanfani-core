@@ -2,8 +2,10 @@ import { EventType } from '@ag-ui/client'
 import type { BaseEvent, CustomEvent as AguiCustomEvent } from '@ag-ui/client'
 import { z } from 'zod'
 
+/** Custom-event name signalling that a human-approval gate has opened. */
 export const GATE_OPENED = 'GATE_OPENED' as const
 
+/** Schema for the payload carried by a `GATE_OPENED` event. */
 export const GateOpenedValueSchema = z.object({
   gateKind: z.literal('approval'),
   toolName: z.string(),

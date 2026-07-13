@@ -58,6 +58,7 @@ export const AgentDefinitionSchema = z
 export type AgentDefinition = z.infer<typeof AgentDefinitionSchema>
 export type AgentDefinitionInput = z.input<typeof AgentDefinitionSchema>
 
+/** Validate and construct an agent definition; throws on a tool/approval/effect rule violation. */
 export function defineAgent(def: AgentDefinitionInput): AgentDefinition {
   return AgentDefinitionSchema.parse(def)
 }

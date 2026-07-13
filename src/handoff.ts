@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { Message, RunAgentInput } from '@ag-ui/client'
 
+/** Schema for a generic thread/email handoff payload. */
 export const HandoffPayloadSchema = z.object({
   threadId: z.string(),
   from: z.string(),
@@ -11,6 +12,7 @@ export const HandoffPayloadSchema = z.object({
 })
 export type HandoffPayload = z.infer<typeof HandoffPayloadSchema>
 
+/** Schema for a ticket/issue handoff payload. */
 export const TicketHandoffPayloadSchema = z.object({
   repo: z.string(),
   number: z.number(),
