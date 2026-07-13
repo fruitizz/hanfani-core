@@ -6,7 +6,10 @@
   "author": "Aziz Mashkour",
   "type": "module",
   "sideEffects": false,
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -16,16 +19,21 @@
   "publishConfig": {
     "access": "public"
   },
-  "homepage": "https://github.com/fruitizz/hanfani-framework/tree/HEAD/packages/core#readme",
+  "homepage": "https://github.com/fruitizz/hanfani-core#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fruitizz/hanfani-framework.git",
-    "directory": "packages/core"
+    "url": "git+https://github.com/fruitizz/hanfani-core.git"
   },
   "bugs": {
-    "url": "https://github.com/fruitizz/hanfani-framework/issues"
+    "url": "https://github.com/fruitizz/hanfani-core/issues"
   },
-  "keywords": ["hanfani", "agent", "workflow", "ai", "human-in-the-loop"],
+  "keywords": [
+    "hanfani",
+    "agent",
+    "workflow",
+    "ai",
+    "human-in-the-loop"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -35,5 +43,13 @@
   "dependencies": {
     "@ag-ui/client": "^0.0.55",
     "zod": "^3.25.76"
+  },
+  "engines": {
+    "node": ">=20.19"
+  },
+  "packageManager": "pnpm@9.12.0",
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^2.1.0"
   }
 }
