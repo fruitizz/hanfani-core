@@ -1,5 +1,11 @@
 # @hanfani/core
 
+[![npm version][npm-version-src]][npm-version-href]
+[![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![bundle][bundle-src]][bundle-href]
+[![JSDocs][jsdocs-src]][jsdocs-href]
+[![License][license-src]][license-href]
+
 Headless engine and types for the Hanfani agent framework.
 
 Pure logic — no I/O, no server, no UI. It defines what a workflow and an agent
@@ -40,8 +46,23 @@ both declared as regular dependencies.
 
 ## Docs
 
-Full API reference and guides are coming soon in the Hanfani framework docs.
+An auto-generated API reference is available at
+[jsdocs.io](https://www.jsdocs.io/package/@hanfani/core). Full guides are coming
+soon in the Hanfani framework docs.
 
 ## License
 
 [MIT](./LICENSE) License © [Fruitizz](https://github.com/fruitizz)
+
+<!-- Badges -->
+
+[npm-version-src]: https://img.shields.io/npm/v/@hanfani/core?style=flat&colorA=080f12&colorB=1fa669
+[npm-version-href]: https://npmjs.com/package/@hanfani/core
+[npm-downloads-src]: https://img.shields.io/npm/dm/@hanfani/core?style=flat&colorA=080f12&colorB=1fa669
+[npm-downloads-href]: https://npmjs.com/package/@hanfani/core
+[bundle-src]: https://img.shields.io/bundlephobia/minzip/@hanfani/core?style=flat&colorA=080f12&colorB=1fa669&label=minzip
+[bundle-href]: https://bundlephobia.com/result?p=@hanfani/core
+[license-src]: https://img.shields.io/github/license/fruitizz/hanfani-core.svg?style=flat&colorA=080f12&colorB=1fa669
+[license-href]: https://github.com/fruitizz/hanfani-core/blob/main/LICENSE
+[jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
+[jsdocs-href]: https://www.jsdocs.io/package/@hanfani/core
