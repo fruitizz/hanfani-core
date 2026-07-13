@@ -1,0 +1,100 @@
+# Validate @hanfani/core before publishing
+
+This is a **fresh, owned reimplementation** of core — not a wrapper. Its public
+API and behaviour were reconstructed from the upstream `.d.ts` contract and
+verified. Still validate end-to-end on your machine before publishing.
+
+> Already checked here: `tsc --noEmit` passes clean under TypeScript 6.0.3
+> against the real `@ag-ui/client` and `zod`, and the runtime assertions in the
+> smoke suite pass on the compiled output. Steps 1–3 reproduce that; step 4 is
+> the real integration gate.
+
+Paths assume the monorepo at `~/Documents/startups/personal/hanfani-framework`
+and the app at `~/Documents/startups/personal/hanfani-inbox`.
+
+## 1. Install + build
+
+```bash
+cd ~/Documents/startups/personal/hanfani-framework
+pnpm install                          # installs TypeScript 7.0.2 (native tsgo compiler)
+pnpm --filter @hanfani/core build     # tsc → dist/*.js + dist/*.d.ts
+```
+
+> Build note: core is compiled with `tsc` (TypeScript 7's native compiler), not
+> tsup. TS 7 removed the programmatic compiler API until 7.1, which breaks
+> `tsup --dts` and similar tools — so declarations are emitted by `tsc` directly.
+> Verified here: typecheck and emit both pass, and the runtime smoke assertions
+> pass against the emitted `dist`.
+
+## 2. Typecheck + unit tests
+
+```bash
+pnpm --filter @hanfani/core typecheck
+pnpm --filter @hanfani/core test      # vitest smoke suite (defineAgent invariant, workflow validation, delivery, lifecycle, handoff round-trip)
+```
+
+## 3. Inspect the publishable artifact
+
+```bash
+cd packages/core
+pnpm pack                        # → hanfani-core-0.1.1.tgz
+tar -tzf hanfani-core-0.1.1.tgz   # expect package/dist/* + package.json + README; NO src/, NO test/
+```
+
+## 4. The real gate — drop it into the app in place of the alias
+
+```bash
+cd ~/Documents/startups/personal/hanfani-inbox
+npm install "@hanfani/core@file:../hanfani-framework/packages/core/hanfani-core-0.1.1.tgz"
+npm run typecheck
+npm test
+npm run demo          # click a full pipeline + an approval flow
+```
+
+Because this is a real reimplementation (not a re-export), this step is what
+proves API + behaviour parity with the `@atizar/core` the app used before. If
+anything diverges, it surfaces here.
+
+To revert while iterating, restore the alias and reinstall:
+
+```json
+"@hanfani/core": "npm:@atizar/core@^0.1.1"
+```
+```bash
+npm install
+```
+
+## 5. Publish (only after step 4 is green)
+
+```bash
+# one-time: create a free npmjs.com account + an org named "hanfani"
+npm login
+cd ~/Documents/startups/personal/hanfani-framework/packages/core
+pnpm publish --access public
+npm view @hanfani/core version    # → 0.1.1
+```
+
+## 6. Switch the app to the published package
+
+```json
+"@hanfani/core": "^0.1.1"
+```
+```bash
+cd ~/Documents/startups/personal/hanfani-inbox
+npm install && npm run typecheck && npm test && npm run demo
+```
+
+---
+
+### Notes
+
+- **Version 0.1.1** is deliberate: it satisfies the app's existing `^0.1.1`
+  range, so swapping the alias needs no range change.
+- **GitHub:** this is a monorepo — push the whole `hanfani-framework` folder to
+  `github.com/fruitizz/hanfani-framework`. `package.json` sets `repository.directory`
+  to `packages/core`, so npm links to the correct subfolder within the repo.
+- **Cleanup:** you can delete the throwaway wrapper I first scaffolded inside the
+  app repo: `rm -rf ~/Documents/startups/personal/hanfani-inbox/hanfani-framework`.
+- **Not yet ported:** the upstream package also shipped an `add-workflow` coding
+  skill under `skills/`. That's tooling, not part of the JS API — port it later
+  if you want feature parity.
