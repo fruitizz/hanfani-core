@@ -9,15 +9,15 @@ verified. Still validate end-to-end on your machine before publishing.
 > smoke suite pass on the compiled output. Steps 1–3 reproduce that; step 4 is
 > the real integration gate.
 
-Paths assume the monorepo at `~/Documents/startups/personal/hanfani-framework`
+Paths assume the standalone repo at `~/Documents/startups/personal/hanfani-core`
 and the app at `~/Documents/startups/personal/hanfani-inbox`.
 
 ## 1. Install + build
 
 ```bash
-cd ~/Documents/startups/personal/hanfani-framework
+cd ~/Documents/startups/personal/hanfani-core
 pnpm install                          # installs TypeScript 7.0.2 (native tsgo compiler)
-pnpm --filter @hanfani/core build     # tsc → dist/*.js + dist/*.d.ts
+pnpm build     # tsc → dist/*.js + dist/*.d.ts
 ```
 
 > Build note: core is compiled with `tsc` (TypeScript 7's native compiler), not
@@ -29,23 +29,22 @@ pnpm --filter @hanfani/core build     # tsc → dist/*.js + dist/*.d.ts
 ## 2. Typecheck + unit tests
 
 ```bash
-pnpm --filter @hanfani/core typecheck
-pnpm --filter @hanfani/core test      # vitest smoke suite (defineAgent invariant, workflow validation, delivery, lifecycle, handoff round-trip)
+pnpm typecheck
+pnpm test      # vitest smoke suite (defineAgent invariant, workflow validation, delivery, lifecycle, handoff round-trip)
 ```
 
 ## 3. Inspect the publishable artifact
 
 ```bash
-cd packages/core
 pnpm pack                        # → hanfani-core-0.1.1.tgz
-tar -tzf hanfani-core-0.1.1.tgz   # expect package/dist/* + package.json + README; NO src/, NO test/
+tar -tzf hanfani-core-0.1.1.tgz   # expect package/dist/* + package/src/* + package.json + README + LICENSE; NO test/
 ```
 
 ## 4. The real gate — drop it into the app in place of the alias
 
 ```bash
 cd ~/Documents/startups/personal/hanfani-inbox
-npm install "@hanfani/core@file:../hanfani-framework/packages/core/hanfani-core-0.1.1.tgz"
+npm install "@hanfani/core@file:../hanfani-core/hanfani-core-0.1.1.tgz"
 npm run typecheck
 npm test
 npm run demo          # click a full pipeline + an approval flow
@@ -69,7 +68,7 @@ npm install
 ```bash
 # one-time: create a free npmjs.com account + an org named "hanfani"
 npm login
-cd ~/Documents/startups/personal/hanfani-framework/packages/core
+cd ~/Documents/startups/personal/hanfani-core
 pnpm publish --access public
 npm view @hanfani/core version    # → 0.1.1
 ```
@@ -90,11 +89,9 @@ npm install && npm run typecheck && npm test && npm run demo
 
 - **Version 0.1.1** is deliberate: it satisfies the app's existing `^0.1.1`
   range, so swapping the alias needs no range change.
-- **GitHub:** this is a monorepo — push the whole `hanfani-framework` folder to
-  `github.com/fruitizz/hanfani-framework`. `package.json` sets `repository.directory`
-  to `packages/core`, so npm links to the correct subfolder within the repo.
-- **Cleanup:** you can delete the throwaway wrapper I first scaffolded inside the
-  app repo: `rm -rf ~/Documents/startups/personal/hanfani-inbox/hanfani-framework`.
+- **GitHub:** this repo hosts the single `@hanfani/core` package at its root and
+  pushes to `github.com/fruitizz/hanfani-core`. Releases are cut with plain
+  `v<version>` tags — see `.github/workflows/release.yml`.
 - **Not yet ported:** the upstream package also shipped an `add-workflow` coding
   skill under `skills/`. That's tooling, not part of the JS API — port it later
   if you want feature parity.
