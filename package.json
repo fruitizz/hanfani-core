@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "description": "Headless engine and types for the Hanfani agent framework.",
   "license": "MIT",
-  "author": "Mashkour Abdel Aziz",
+  "author": "Fruitizz",
   "type": "module",
   "sideEffects": false,
   "files": [
