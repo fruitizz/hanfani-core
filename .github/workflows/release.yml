@@ -33,11 +33,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Guard — tag must match package.json version
         run: |
@@ -56,12 +55,12 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Publish to npm (public, with provenance)
-        run: pnpm publish --access public --no-git-checks --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+
+      - name: Publish to npm (public, with provenance)
+        run: pnpm publish --access public --no-git-checks --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
