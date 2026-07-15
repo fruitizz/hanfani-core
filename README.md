@@ -22,25 +22,6 @@ and `providerConformanceChecks` proves any model provider honors that at runtime
 `@hanfani/core` is the shared contract between three layers — definitions and
 pure logic live here; execution and rendering live in consuming apps.
 
-```mermaid
-flowchart LR
-    subgraph core ["@hanfani/core"]
-        Defs["defineAgent / defineWorkflow"]
-        Gate["GATE_OPENED protocol"]
-        Utils["messages · lifecycle · delivery"]
-        Cert["providerConformanceChecks"]
-    end
-
-    Provider["Provider adapters\n(Claude, etc.)"] -->|"run() → gate opens"| Gate
-    Gate -->|"human decides"| UI["UI layer\n(renders approval cards)"]
-    UI -->|"resume(approved | rejected)"| Provider
-    Provider -->|"approved only"| Server["Server\n(runs effects)"]
-    Defs --> Provider
-    Defs --> Server
-    Defs --> UI
-    Cert -->|"certifies"| Provider
-```
-
 `defineAgent` and `defineWorkflow` declare what agents and workflows *are* —
 tools, approvals, effects, handoffs, and published input contracts. A provider
 calls `run()` and emits a `GATE_OPENED` event when an approval tool fires; the
