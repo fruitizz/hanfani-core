@@ -3,6 +3,8 @@ name: Release
 # Publishes @hanfani/core to npm when you push a version tag, e.g.:
 #   git tag v0.1.2 && git push origin v0.1.2
 #
+# Or re-run a failed publish manually:
+#   gh workflow run release.yml --ref v0.1.5
 # Prerequisite (one-time):
 #   - Repo secret NPM_TOKEN = an npm "Automation" access token with publish
 #     rights to the @hanfani scope (Automation tokens bypass 2FA, required in CI).
@@ -14,6 +16,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write # create the GitHub Release
@@ -26,9 +29,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Derive version from tag
+      - name: Derive version
         id: version
-        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: pnpm/action-setup@v4 # reads packageManager from package.json
 
@@ -59,6 +67,7 @@ jobs:
         run: pnpm build
 
       - name: Create GitHub Release
+        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
