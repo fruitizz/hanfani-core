@@ -1,6 +1,6 @@
 {
   "name": "@hanfani/core",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Headless engine and types for the Hanfani agent framework.",
   "license": "MIT",
   "author": "Fruitizz",
