@@ -4,7 +4,6 @@
 // the server acts. `defineAgent` refuses any effect that isn't gated behind an
 // approval; the conformance suite proves providers honour that at runtime.
 
-// Re-export the two @ag-ui/client types that appear in the public API.
 export type { Message, ToolCall } from '@ag-ui/client'
 
 export {
@@ -12,15 +11,19 @@ export {
   defineAgent,
   type AgentDefinition,
   type AgentDefinitionInput,
-} from './defineAgent.js'
+} from './agent/index.js'
 
-export { defineWorkflow, instanceId } from './defineWorkflow.js'
+export { defineWorkflow, instanceId, resolveDelivery } from './workflow/index.js'
 
-export { definePrompt, type PromptSpec } from './definePrompt.js'
-
-export { defineProviders } from './providers.js'
-
-export { composeInstructions } from './prompt.js'
+export {
+  definePrompt,
+  defineProviders,
+  composeInstructions,
+  providerConformanceChecks,
+  type PromptSpec,
+  type ConformanceCheck,
+  type ConformanceScenario,
+} from './provider/index.js'
 
 export {
   approvalResolved,
@@ -31,20 +34,21 @@ export {
   pairToolResults,
   resolvedApprovalCount,
   toolCallsOf,
+  foldEventsToMessages,
   type AssistantMessage,
   type ToolMessage,
-} from './messages.js'
+} from './messages/index.js'
 
 export {
   decodeHandoff,
   encodeHandoff,
   HandoffPayloadSchema,
   TicketHandoffPayloadSchema,
+  handoffNote,
   type HandoffPayload,
   type TicketHandoffPayload,
-} from './handoff.js'
-
-export { handoffNote, type HandoffNoteValue } from './handoffNote.js'
+  type HandoffNoteValue,
+} from './handoff/index.js'
 
 export {
   GATE_OPENED,
@@ -52,25 +56,17 @@ export {
   GateOpenedValueSchema,
   readGateOpened,
   type GateOpenedValue,
-} from './gate.js'
-
-export { LIFECYCLE_NOTE_TEXT, lifecycleNote, type LifecycleNoteValue } from './lifecycleNote.js'
-
-export { hasLiveDescendant, lifecycle } from './lifecycle.js'
-
-export { foldEventsToMessages } from './fold.js'
-
-export { resolveDelivery } from './delivery.js'
+} from './gate/index.js'
 
 export {
-  providerConformanceChecks,
-  type ConformanceCheck,
-  type ConformanceScenario,
-} from './conformance.js'
+  LIFECYCLE_NOTE_TEXT,
+  lifecycleNote,
+  hasLiveDescendant,
+  lifecycle,
+  type LifecycleNoteValue,
+} from './lifecycle/index.js'
 
-export { aggregateHealth, isOk } from './integration.js'
-
-export { isOAuth2 } from './integrationAuth.js'
+export { aggregateHealth, isOk, isOAuth2 } from './integration/index.js'
 
 export type {
   AgentRole,
@@ -98,4 +94,4 @@ export type {
   WorkflowConnection,
   WorkflowDescriptor,
   WorkflowInput,
-} from './types.js'
+} from './types/index.js'
