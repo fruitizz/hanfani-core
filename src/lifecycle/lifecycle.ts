@@ -1,4 +1,4 @@
-import type { Lifecycle, Outcome, Phase } from './types.js'
+import type { Lifecycle, Outcome, Phase } from '../types/index.js'
 
 const LIVE_PHASES = new Set<Phase>(['queued', 'active', 'awaiting_human'])
 const SILENT_OUTCOMES = new Set<Outcome>(['superseded', 'reset', 'dismissed'])

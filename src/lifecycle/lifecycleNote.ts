@@ -1,6 +1,6 @@
 import { EventType } from '@ag-ui/client'
 import type { BaseEvent } from '@ag-ui/client'
-import type { Outcome } from './types.js'
+import type { Outcome } from '../types/index.js'
 
 export interface LifecycleNoteValue {
   kind: 'lifecycle'
