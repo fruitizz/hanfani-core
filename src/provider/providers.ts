@@ -1,4 +1,4 @@
-import type { ProviderFactory, ProviderRegistry } from './types.js'
+import type { ProviderFactory, ProviderRegistry } from '../types/index.js'
 
 /** Build a registry that resolves provider factories by name. */
 export function defineProviders(map: Record<string, ProviderFactory>): ProviderRegistry {

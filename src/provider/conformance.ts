@@ -1,7 +1,7 @@
 import { EventType } from '@ag-ui/client'
 import type { BaseEvent, RunAgentInput } from '@ag-ui/client'
-import { readGateOpened, type GateOpenedValue } from './gate.js'
-import type { GateResolution, Provider, ResumeHandle } from './types.js'
+import { readGateOpened, type GateOpenedValue } from '../gate/gate.js'
+import type { GateResolution, Provider, ResumeHandle } from '../types/index.js'
 
 export interface ConformanceScenario {
   approvalNames: readonly string[]

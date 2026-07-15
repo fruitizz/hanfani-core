@@ -1,7 +1,7 @@
 import type { RunAgentInput } from '@ag-ui/client'
 import type { z } from 'zod'
-import { decodeHandoff } from './handoff.js'
-import type { PromptStrategy, ResumeOutcome } from './types.js'
+import { decodeHandoff } from '../handoff/handoff.js'
+import type { PromptStrategy, ResumeOutcome } from '../types/index.js'
 
 export interface PromptSpec<T> {
   input?: z.ZodType<T>
