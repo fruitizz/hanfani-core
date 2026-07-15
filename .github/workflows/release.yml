@@ -7,6 +7,8 @@ name: Release
 #   - Repo secret NPM_TOKEN = an npm "Automation" access token with publish
 #     rights to the @hanfani scope (Automation tokens bypass 2FA, required in CI).
 #     Create at npmjs.com → Access Tokens → Generate New Token → Automation.
+#   - The token must belong to the npm user that owns @hanfani/core (fruitizz).
+#   - Use a GitHub Actions *secret*, not a repository variable.
 
 on:
   push:
@@ -33,6 +35,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@hanfani'
 
       - name: Install
         run: pnpm install
@@ -59,18 +63,29 @@ jobs:
         with:
           generate_release_notes: true
 
-      - name: Publish to npm (public, with provenance)
+      - name: Verify npm auth
         run: |
-          # strip any stray whitespace/newline from the secret (illegal in an HTTP header)
           TOKEN="$(printf '%s' "$NODE_AUTH_TOKEN" | tr -d '[:space:]')"
           if [ -z "$TOKEN" ]; then
-            echo "::error::NPM_TOKEN secret is not set — add it in Settings → Secrets and variables → Actions"
+            echo "::error::NPM_TOKEN secret is not set — add it under Settings → Secrets and variables → Actions → Secrets"
             exit 1
           fi
+          case "$TOKEN" in
+            npm_*) ;;
+            *)
+              echo "::error::NPM_TOKEN must be a single-line npm Automation token starting with npm_"
+              exit 1
+              ;;
+          esac
           {
-            echo "registry=https://registry.npmjs.org/"
+            echo "@hanfani:registry=https://registry.npmjs.org/"
             echo "//registry.npmjs.org/:_authToken=$TOKEN"
           } > ~/.npmrc
-          pnpm publish --access public --no-git-checks --provenance
+          echo "Authenticated as: $(npm whoami)"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to npm (public, with provenance)
+        run: pnpm publish --access public --no-git-checks --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
