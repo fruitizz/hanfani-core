@@ -1,5 +1,5 @@
 import { instanceId } from './defineWorkflow.js'
-import type { DeliveryResult, Destination, WorkflowDescriptor } from './types.js'
+import type { DeliveryResult, Destination, WorkflowDescriptor } from '../types/index.js'
 
 /**
  * Resolve where a payload should be delivered. Agent destinations resolve

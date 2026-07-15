@@ -1,4 +1,4 @@
-import type { WorkflowDescriptor } from './types.js'
+import type { WorkflowDescriptor } from '../types/index.js'
 
 /** Stable instance id for an agent within a workflow. */
 export function instanceId(workflowId: string, agentId: string): string {
