@@ -1,7 +1,7 @@
 import { EventType } from '@ag-ui/client'
 import type { BaseEvent, Message } from '@ag-ui/client'
-import type { Outcome } from './types.js'
-import { LIFECYCLE_NOTE_TEXT } from './lifecycleNote.js'
+import { LIFECYCLE_NOTE_TEXT } from '../lifecycle/lifecycleNote.js'
+import type { Outcome } from '../types/index.js'
 
 type FoldToolCall = {
   id: string
