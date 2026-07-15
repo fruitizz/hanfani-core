@@ -17,6 +17,38 @@ Pure logic — no I/O, no server, no UI. It defines what a workflow and an agent
 `defineAgent` refuses any side effect that isn't behind a human-approval gate,
 and `providerConformanceChecks` proves any model provider honors that at runtime.
 
+## Architecture
+
+`@hanfani/core` is the shared contract between three layers — definitions and
+pure logic live here; execution and rendering live in consuming apps.
+
+```mermaid
+flowchart LR
+    subgraph core ["@hanfani/core"]
+        Defs["defineAgent / defineWorkflow"]
+        Gate["GATE_OPENED protocol"]
+        Utils["messages · lifecycle · delivery"]
+        Cert["providerConformanceChecks"]
+    end
+
+    Provider["Provider adapters\n(Claude, etc.)"] -->|"run() → gate opens"| Gate
+    Gate -->|"human decides"| UI["UI layer\n(renders approval cards)"]
+    UI -->|"resume(approved | rejected)"| Provider
+    Provider -->|"approved only"| Server["Server\n(runs effects)"]
+    Defs --> Provider
+    Defs --> Server
+    Defs --> UI
+    Cert -->|"certifies"| Provider
+```
+
+`defineAgent` and `defineWorkflow` declare what agents and workflows *are* —
+tools, approvals, effects, handoffs, and published input contracts. A provider
+calls `run()` and emits a `GATE_OPENED` event when an approval tool fires; the
+UI renders the proposed artifact and the human approves or rejects. On approve,
+the server runs the bound effect; on reject, no side effects run.
+`providerConformanceChecks` certifies that any provider adapter honors this
+two-phase contract.
+
 ## Install
 
 ```bash
