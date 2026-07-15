@@ -1,4 +1,4 @@
-import type { AuthSpec } from './types.js'
+import type { AuthSpec } from '../types/index.js'
 
 /** Narrow an AuthSpec to its oauth2 variant. */
 export function isOAuth2(

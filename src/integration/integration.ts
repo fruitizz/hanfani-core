@@ -1,4 +1,4 @@
-import type { HealthCheck } from './types.js'
+import type { HealthCheck } from '../types/index.js'
 
 /** Narrow a HealthCheck to its ok variant. */
 export function isOk(h: HealthCheck): h is { ok: true; detail?: string } {
