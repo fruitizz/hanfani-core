@@ -1,6 +1,6 @@
 import type { BaseEvent, Message, RunAgentInput, ToolCall } from '@ag-ui/client'
 import type { z } from 'zod'
-import type { AgentDefinition } from './defineAgent.js'
+import type { AgentDefinition } from '../agent/defineAgent.js'
 
 // Re-export the two @ag-ui/client types that appear in this package's public API,
 // so consumers can import them from @hanfani/core directly.
